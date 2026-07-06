@@ -1,6 +1,6 @@
-# ncmd
+# NCMD
 
-A collection of nonparametric statistical experiments based on nearest-neighbor conditional mean dependence (NNCMD). The repository contains three self-contained experiment directories.
+This repository contains codes for experiments from the paper: Conditional Mean Independence and Global Sensitivity Analysis using Nearest Neighbor Graphs.
 
 ---
 
@@ -43,20 +43,20 @@ Benchmarks several tests for the null hypothesis H₀: E[Y | X] = E[Y] across un
 - **Azadkia–Chatterjee** — nearest neighbor based independence test
 - **MDD** — martingale difference divergence with multiplier bootstrap
 - **dCov** — distance covariance permutation test
-- **pMIT** — XGBoost-based split test
+- **pMIT** — XGBoost-based split sample test
 
 Outputs: power curves and timing tables across Normal, Uniform, and Beta covariate distributions, in both univariate and multivariate (d = 5) regimes.
 
 ### Variable Importance
 
-Estimates and validates **Sobol sensitivity indices** via nearest-neighbor regression on a synthetic model with main effects, two-way, and three-way interactions. Experiments sweep over:
+Estimates and validates **Sobol sensitivity indices** via nearest-neighbors on a synthetic model with main effects, two-way, and three-way interactions. Experiments sweep over:
 
 - **Sample size n** (`Over_n.py`) — convergence of estimators to population values
 - **Interaction parameter θ** (`Over_Theta.py`) — sensitivity of Sobol indices as θ varies
 
 ### Variable Screening
 
-Greedy forward variable selection using NNCMD statistics, benchmarked against marginal screening methods (MDCSIS, BcorSIS, Kfilter from the R `MFSIS` package). Experiments include:
+Greedy forward variable selection using NCMD statistics, benchmarked against marginal screening methods (MDCSIS, BcorSIS, Kfilter from the R `MFSIS` package). Experiments include:
 
 - **Simulations** (`simulations.ipynb`) — exact recovery and containment rates across six nonlinear data-generating processes, varying n and p
-- **California Housing** (`california_housing_*.ipynb`) — real-data feature selection at three significance thresholds (α ∈ {0.01, 0.05, 0.1})
+- **California Housing** (`california_housing_*.ipynb`) — real-data feature selection at three noise thresholds ($\sigma$ ∈ {0.01, 0.05, 0.1})
