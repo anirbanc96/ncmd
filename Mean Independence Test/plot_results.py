@@ -1,7 +1,6 @@
 import pickle
 from utils import plot_power_curves
 
-# ── Colour / marker maps ──────────────────────────────────────────────────────
 COLORS_UNI = {
     "MDD":            "red",
     "dCov":           "purple",
@@ -40,7 +39,6 @@ MARKERS_MULTI = {
     "NCMD [k=10]":    "*",
 }
 
-# ── Setting labels ────────────────────────────────────────────────────────────
 SETTING_LABELS = {
     "Linear":          "Linear [Power]",
     "Step":            "Step [Power]",
@@ -59,9 +57,9 @@ SETTING_LABELS_MULTI = {
     "Radial":                 "Radial [Power]",
 }
 
-# ── Data files ────────────────────────────────────────────────────────────────
+
 DATASETS = [
-    # (pkl_path, labels, colors, markers, col_size, row_size, out_pdf)
+
     (
         "results_uniform_univariate_d1_n250_nsim200.pkl",
         SETTING_LABELS, COLORS_UNI, MARKERS_UNI,

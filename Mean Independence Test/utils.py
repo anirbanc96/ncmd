@@ -14,9 +14,9 @@ def generate_data(n, lam, setting, rng, X_setting = "uniform"):
     elif X_setting == "normal":
         X = rng.normal(0, 1, size = n)
     elif X_setting == "beta":
-        alpha = 0.1  # adjust for heaviness; smaller -> more extreme edges
+        alpha = 0.1  
         U = rng.beta(alpha, alpha, size=n)
-        X = 2 * U - 1  # transform to [-1,1]
+        X = 2 * U - 1  
 
 
     if setting == "Linear":
@@ -36,7 +36,7 @@ def generate_data(n, lam, setting, rng, X_setting = "uniform"):
         Y = np.cos(8 * np.pi * X) + 3 * lam * rng.standard_normal(n)
 
     elif setting == "Circular":
-        Z = 2 * rng.binomial(1, 0.5, size=n) - 1          # ±1 with equal prob
+        Z = 2 * rng.binomial(1, 0.5, size=n) - 1          
         Y = Z * np.sqrt(np.clip(1 - X**2, 0, None)) + 0.9 * lam * rng.standard_normal(n)
 
     elif setting == "Heteroskedastic":
@@ -55,7 +55,7 @@ def generate_data_multivariate(n, d, lam, setting, rng, X_setting="uniform"):
     elif X_setting == "normal":
         X = rng.normal(0, 1, size=(n, d))
     elif X_setting == "beta":
-        alpha = 0.1  # heavy tails near ±1
+        alpha = 0.1  
         U = rng.beta(alpha, alpha, size=(n, d))
         X = 2*U - 1
     else:
@@ -65,22 +65,21 @@ def generate_data_multivariate(n, d, lam, setting, rng, X_setting="uniform"):
         Y = rng.normal(0, lam, size=n)  # mean independent
 
     elif setting == "Heteroskedastic":
-        # Z is independent of X with E[Z] = 0  →  E[Y|X] = 0 exactly
-        # Var(Y|X) = f(X)^2 + lambda^2 depends strongly on X through all d dimensions
-        Z   = 2 * rng.binomial(1, 0.5, size=n) - 1                    # ±1, independent of X
-        f_X = 1 + 2 * np.sum(np.abs(X ** 2), axis=1)                      # uses all d columns
+
+        Z   = 2 * rng.binomial(1, 0.5, size=n) - 1                    
+        f_X = 1 + 2 * np.sum(np.abs(X ** 2), axis=1)                      
         Y   = Z * f_X + lam * rng.standard_normal(n)
 
     elif setting == "Nonlinear Additive":
-        # sum of nonlinear functions across first 2 dimensions
+
         Y = np.sin(np.pi*X[:, 0]) + np.log(np.abs(X[:, 1])+1) + lam * rng.standard_normal(n)
 
     elif setting == "Interaction":
-        # product interaction between first 2 dimensions
+
         Y = X[:, 0] * X[:, 1] + lam * rng.standard_normal(n)
 
     elif setting == "Radial":
-        # randomly choose 5 coordinates
+
         d = X.shape[1]
         if d < 5:
             raise ValueError("Radial setting requires d >= 5")
@@ -101,7 +100,6 @@ def generate_data_multivariate(n, d, lam, setting, rng, X_setting="uniform"):
     return X, Y.reshape(n, 1)
 
 def _run_setting(setting, lambda_grid, methods, n, n_sim, X_setting, seed, d=1, dim_X="univariate"):
-    """Worker for a single setting. Joblib/cloudpickle can pickle lambdas."""
 
     rng          = np.random.default_rng(seed)
     method_names = list(methods.keys())
@@ -109,7 +107,7 @@ def _run_setting(setting, lambda_grid, methods, n, n_sim, X_setting, seed, d=1, 
         m: {"mean": np.zeros(len(lambda_grid)), "sd": np.zeros(len(lambda_grid))}
         for m in method_names
     }
-    # Accumulate total time and call count across all lambdas
+
     timing = {m: {"total_time": 0.0, "count": 0} for m in method_names}
 
     for l_idx, lam in enumerate(lambda_grid):
@@ -147,7 +145,6 @@ def _run_setting(setting, lambda_grid, methods, n, n_sim, X_setting, seed, d=1, 
                         for m in method_names),
               flush=True)
 
-    # Compute average time per call (in milliseconds) for each method
     avg_times = {
         m: (timing[m]["total_time"] / timing[m]["count"]) * 1000
         for m in method_names
@@ -178,14 +175,13 @@ def run_experiment(lambda_grid, methods, SETTINGS, n=150, n_sim=500, seed=42, X_
             for m in method_names}
         for s in SETTINGS
     }
-    # timings[setting][method] → avg ms per call
+
     timings = {s: {m: 0.0 for m in method_names} for s in SETTINGS}
 
     for setting, setting_results, avg_times in outcomes:
         results[setting] = setting_results
         timings[setting] = avg_times
 
-    # Print a summary table
     print("\n── Timing summary (avg ms / call) ──")
     header = f"{'Setting':<20}" + "".join(f"{m:>18}" for m in method_names)
     print(header)
@@ -211,8 +207,8 @@ def plot_power_curves(results, SETTING_LABELS, COLORS, MARKERS, lambda_grid, sav
     type1_settings = [s for s in settings if "[Type-I]" in SETTING_LABELS.get(s, "")]
     power_settings = [s for s in settings if "[Power]"  in SETTING_LABELS.get(s, "")]
 
-    _ws = 0.4   # wspace between the two Power columns
-    fig_width  = (3 + _ws) * col_size + 1   # extra col_size*_ws compensates for the inter-column gap
+    _ws = 0.4   
+    fig_width  = (3 + _ws) * col_size + 1   
     fig_height = 2 * row_size + 1
 
     fig = plt.figure(figsize=(fig_width, fig_height))
@@ -309,12 +305,11 @@ def plot_times_table(times, save_path="method_times.pdf",col_width=1.2, row_heig
     tbl.auto_set_font_size(False)
     tbl.set_fontsize(fontsize)
 
-    # Scale rows to fill the figure height tightly
     tbl.scale(1, (fig_h / (n_rows + 1)) / 0.22)
 
     ax.set_title("Average Execution Time (ms)",
                  fontsize=fontsize + 2, fontweight="bold",
-                 pad=6, loc="center", x = 0.35, y=1.02)   # y=1.02 pins title above table
+                 pad=6, loc="center", x = 0.35, y=1.02)   
 
     with PdfPages(save_path) as pdf:
         pdf.savefig(fig, bbox_inches="tight")

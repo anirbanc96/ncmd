@@ -8,9 +8,6 @@ from rpy2.robjects import default_converter, numpy2ri
 from rpy2.robjects.conversion import localconverter
 from joblib import Parallel, delayed
 
-# ---------------------------------------------------------------------------
-# R / MFSIS setup
-# ---------------------------------------------------------------------------
 
 _mfsis_pkg = importr("MFSIS")
 
@@ -28,7 +25,7 @@ _r_mfsis = robjects.globalenv["mfsis_r"]
 
 
 def _mfsis_select(X, Y, method, nsis=None):
-    """Generic MFSIS wrapper — calls the R MFSIS package with the given method string."""
+
     n, p = X.shape
     if nsis is None:
         nsis = int(n / np.log(n))
@@ -45,11 +42,6 @@ def _mfsis_select(X, Y, method, nsis=None):
     result = _r_mfsis(X_r, Y_r, robjects.StrVector([method]), robjects.IntVector([nsis]))
     return [int(i) - 1 for i in result]
 
-
-# ---------------------------------------------------------------------------
-# Core statistics
-# ---------------------------------------------------------------------------
-
 def _median_bandwidth(Y):
     diffs = np.abs(Y[:, None] - Y[None, :])
     return np.median(diffs[np.triu_indices(len(Y), k=1)])
@@ -63,7 +55,7 @@ def _double_center(D):
 
 
 def compute_T_stat(X, Y, S, k_nn=10):
-    """NNCMI test statistic: E[Y_i * mean_{j in NN_k(i)} Y_j]."""
+
     if len(S) == 0:
         return 0.0
     n = len(Y)
@@ -78,7 +70,7 @@ def compute_T_stat(X, Y, S, k_nn=10):
 
 
 def compute_kfoci_stat(X, Y, S, k_nn=10):
-    """Kernel FOCI statistic (Chatterjee). Uses Gaussian kernel on Y at NN pairs in X."""
+
     if len(S) == 0:
         return 0.0
     X_sub = X[:, S]
@@ -94,27 +86,8 @@ def compute_kfoci_stat(X, Y, S, k_nn=10):
     return np.mean(K_vals)
 
 
-# ---------------------------------------------------------------------------
-# Greedy forward selection
-# ---------------------------------------------------------------------------
-
 def forward_selection(X, Y, k_nn=10, statistic="nncmi"):
-    """
-    Greedy forward variable selection using NNCMI or Chatterjee statistic.
-
-    Stops when no candidate variable improves the current best T value.
-
-    Parameters
-    ----------
-    X         : (n, p) array
-    Y         : (n,) array
-    k_nn      : number of nearest neighbours
-    statistic : 'nncmi' (alias 'linear') or 'chatterjee' (alias 'kfoci')
-
-    Returns
-    -------
-    List of selected feature indices (0-based).
-    """
+    
     if statistic in ("nncmi", "linear"):
         T_fn = compute_T_stat
     elif statistic in ("chatterjee", "kfoci"):
@@ -147,16 +120,8 @@ def forward_selection(X, Y, k_nn=10, statistic="nncmi"):
     return selected
 
 
-# ---------------------------------------------------------------------------
-# Marginal screening methods
-# ---------------------------------------------------------------------------
-
 def mdc_select(X, Y, nsis=None):
-    """
-    Select top features by MDC-based sure independence screening.
 
-    Default nsis = floor(n / log(n)), capped at p.
-    """
     n, p = X.shape
     if nsis is None:
         nsis = int(n / np.log(n))
@@ -180,12 +145,12 @@ def mdc_select(X, Y, nsis=None):
 
 
 def bcorsis_select(X, Y, nsis=None):
-    """Ball Correlation SIS. Default nsis = floor(n / log(n)), capped at p."""
+
     return _mfsis_select(X, Y, "BcorSIS", nsis)
 
 
 def kfilter_select(X, Y, nsis=None):
-    """Kernel Filter SIS. Default nsis = floor(n / log(n)), capped at p."""
+
     return _mfsis_select(X, Y, "Kfilter", nsis)
 
 
@@ -194,7 +159,7 @@ def kfilter_select(X, Y, nsis=None):
 # ---------------------------------------------------------------------------
 
 def data_generation(n=200, p=10, setting="setting1", rho=0.7):
-    """Generate synthetic (X, Y) data for simulation experiments."""
+
     X = np.random.normal(0, 1, (n, p))
     eps = np.random.normal(0, 1, n)
     if setting == "setting1":
@@ -228,7 +193,7 @@ def data_generation(n=200, p=10, setting="setting1", rho=0.7):
 # ---------------------------------------------------------------------------
 
 def _select_features(X, Y, k_nn, statistic, nsis):
-    """Route to the correct selection function for simulation experiments."""
+
     if statistic in ("linear", "nncmi"):
         return forward_selection(X, Y, k_nn, "nncmi")
     elif statistic in ("kfoci", "chatterjee"):
@@ -242,10 +207,6 @@ def _select_features(X, Y, k_nn, statistic, nsis):
     else:
         raise ValueError(f"Unknown statistic: {statistic!r}")
 
-
-# ---------------------------------------------------------------------------
-# Simulation runners
-# ---------------------------------------------------------------------------
 
 def run_experiment(setting, true_set={0, 1, 2}, n_sim=200, n=200, p=10, k_nn=10, statistic="linear"):
     nsis = len(true_set)

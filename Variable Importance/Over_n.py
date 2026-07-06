@@ -5,8 +5,6 @@ from tqdm import tqdm
 
 np.random.seed(42)
 
-# ── DGP (original) ───────────────────────────────────────────────────────────
-
 def generate_fully_modular_data(n, theta, d1, d2, a, sigma=0.2):
     X1 = np.random.uniform(-a, a, (n, d1))
     X2 = np.random.uniform(-a, a, (n, d2))
@@ -28,8 +26,6 @@ def generate_fully_modular_data(n, theta, d1, d2, a, sigma=0.2):
     return X1, X2, X3, Y.flatten()
 
 
-# ── Population truth ─────────────────────────────────────────────────────────
-
 def compute_fully_modular_population(theta, d1, d2, a, sigma=0.2):
     v_X = (a**2) / 3.0
 
@@ -46,9 +42,6 @@ def compute_fully_modular_population(theta, d1, d2, a, sigma=0.2):
     eta2    = v_f2  / v_Y
     eta2_13 = v_f13 / v_Y
     return eta1, eta2, eta2_13
-
-
-# ── KNN estimators ───────────────────────────────────────────────────────────
 
 def nn_expectation_term(X, Y, K=5):
     n = len(Y)
@@ -77,8 +70,6 @@ def estimate_all_sobol_indices(X1, X2, X3, Y, K=15):
     return hat_eta1, hat_eta2, hat_eta2_13
 
 
-# ── Convergence experiment ────────────────────────────────────────────────────
-
 def run_convergence_experiment(n_values, theta, d1, d2, a, sigma, K, n_reps):
     pop = compute_fully_modular_population(theta, d1, d2, a, sigma)
     records = {n: [] for n in n_values}
@@ -94,8 +85,6 @@ def run_convergence_experiment(n_values, theta, d1, d2, a, sigma, K, n_reps):
                       for i in range(3)])
     return pop, means, stds
 
-
-# ── Plot ─────────────────────────────────────────────────────────────────────
 
 def plot_convergence(n_values, pop, means, stds, theta):
     labels  = [r'${\eta}_{X_1}$',
@@ -134,8 +123,6 @@ def plot_convergence(n_values, pop, means, stds, theta):
     plt.show()
     print("Figure saved → sobol_convergence_original.png")
 
-
-# ── Main ─────────────────────────────────────────────────────────────────────
 
 if __name__ == '__main__':
     theta    = 1

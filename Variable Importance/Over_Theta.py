@@ -30,30 +30,28 @@ for i, t in enumerate(theta_vals):
     est_stds[i] = np.std(trials, axis=0)
 
 
-# --- Plotting ---
 plt.figure(figsize=(3.5, 3))
 colors = ['#1f77b4', '#ff7f0e', '#2ca02c']
-# Update labels as requested
+
 labels = [r'$\eta_{X_1}$', r'$\eta_{X_2}$', r'$\eta_{2}$']
 
-# Plot lines
 for idx in range(3):
-    # Plot true population
+
     plt.plot(theta_vals, pop_vals[:, idx], '-', color=colors[idx], linewidth=2)
-    # Plot estimates
+
     plt.plot(theta_vals, est_means[:, idx], '--', marker='o', markersize=4, color=colors[idx], alpha=0.8)
-    # Shading
+
     plt.fill_between(theta_vals,
                      est_means[:, idx] - est_stds[:, idx],
                      est_means[:, idx] + est_stds[:, idx],
                      color=colors[idx], alpha=0.15)
 
-# 1. Legend for Colors (Indices)
+
 color_handles = [mlines.Line2D([], [], color=c, label=l) for c, l in zip(colors, labels)]
 leg1 = plt.legend(handles=color_handles, loc='upper left', title="", labelspacing=0.001)
 plt.gca().add_artist(leg1)
 
-# 2. Legend for Line Styles (Actual vs Estimate)
+
 line_handles = [
     mlines.Line2D([], [], color='black', linestyle='-', label='Actual'),
     mlines.Line2D([], [], color='black', linestyle='--', marker='o', label='Estimate')

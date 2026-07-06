@@ -6,9 +6,7 @@ from tqdm import tqdm
 np.random.seed(42)
 
 def generate_fully_modular_data(n, theta, d1, d2, a, sigma=0.2):
-    """
-    Generates synthetic data with an added three-way interaction term (S1 * S2 * X3).
-    """
+
     X1 = np.random.uniform(-a, a, (n, d1))
     X2 = np.random.uniform(-a, a, (n, d2))
     X3 = np.random.uniform(-a, a, (n, 1))
@@ -28,23 +26,18 @@ def generate_fully_modular_data(n, theta, d1, d2, a, sigma=0.2):
     return X1, X2, X3, Y.flatten()
 
 def compute_fully_modular_population(theta, d1, d2, a, sigma=0.2):
-    """
-    Computes analytical Sobol indices factoring the three-way variance into the total variance.
-    """
-    # Base variance of a single uniform variable
+
+
     v_X = (a**2) / 3.0
 
-    # Main effects variances (Corrected v_f1 to include theta**2)
     v_f1 = (theta**2) * (d1 * v_X)
     v_f2 = (theta**2) * (d2 * v_X)
     v_f3 = (theta**2) * v_X  
     v_epsilon = sigma**2
 
-    # Interaction variances (Corrected coefficients to (2-theta)**2)
     v_f13 = ((2 - theta)**2) * (d1 * v_X) * v_X
     v_f123 = ((2 - theta)**2) * (d1 * v_X) * (d2 * v_X) * v_X 
 
-    # Total variance accumulation
     v_Y = v_f1 + v_f2 + v_f3 + v_f13 + v_f123 + v_epsilon
 
     eta1 = v_f1 / v_Y
