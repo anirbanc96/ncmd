@@ -39,11 +39,11 @@ ncmd/
 Benchmarks several tests for the null hypothesis H₀: E[Y | X] = E[Y] across univariate and multivariate settings with varying noise levels (λ). Compares:
 
 - **NCMD** — nearest-neighbor conditional mean independence test (proposed)
-- **Chatterjee** — rank-based independence test [[Chatterjee, 2021]]
-- **Azadkia–Chatterjee** — nearest-neighbor graph coefficient of conditional dependence [[Azadkia & Chatterjee, 2021]]
-- **MDD** — martingale difference divergence test [[Shao & Zhang, 2014]]
-- **dCov** — distance covariance test [[Székely, Rizzo & Bakirov, 2007]]
-- **pMIT** — split-sample prediction-based mean independence test using XGBoost [[Cai, Guo & Zhong, 2025]]
+- **Chatterjee** — rank-based independence test [Chatterjee, 2021]
+- **Azadkia–Chatterjee** — nearest-neighbor graph coefficient of conditional dependence [Azadkia & Chatterjee, 2021]
+- **MDD** — martingale difference divergence test [Shao & Zhang, 2014]
+- **dCov** — distance covariance test [Székely, Rizzo & Bakirov, 2007]
+- **pMIT** — split-sample prediction-based mean independence test using XGBoost [Cai, Guo & Zhong, 2025]
 
 
 Outputs: power curves and timing tables across Normal, Uniform, and Beta covariate distributions, in both univariate and multivariate (d = 5) regimes.
