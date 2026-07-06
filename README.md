@@ -46,7 +46,7 @@ Benchmarks several tests for the null hypothesis H₀: E[Y | X] = E[Y] across un
 - **pMIT** — partial mean dependence using XGBoost [Cai, Guo & Zhong, 2025]
 
 
-Outputs: power curves and timing tables across Normal, Uniform, and Beta covariate distributions, in both univariate and multivariate (d = 5) regimes.
+Outputs: power curves and timing tables across Normal, Uniform, and Beta covariate distributions, in both univariate and multivariate (d = 10) regimes.
 
 ### Variable Importance
 
