@@ -39,8 +39,8 @@ ncmd/
 Benchmarks several tests for the null hypothesis H₀: E[Y | X] = E[Y] across univariate and multivariate settings with varying noise levels (λ). Compares:
 
 - **NCMD** — nearest-neighbor conditional mean independence test (proposed)
-- **Chatterjee** — rank-based correlation test
-- **Azadkia–Chatterjee** — permutation test using the T statistic
+- **Chatterjee** — rank-based independence test
+- **Azadkia–Chatterjee** — nearest neighbor based independence test
 - **MDD** — martingale difference divergence with multiplier bootstrap
 - **dCov** — distance covariance permutation test
 - **pMIT** — XGBoost-based split test
